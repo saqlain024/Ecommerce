@@ -5,6 +5,7 @@ import Home from "./pages/Home";
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
 import CartPage from "./pages/CartPage";
+import Checkout from "./pages/Checkout";
 
 import {
   createBrowserRouter,
@@ -29,9 +30,13 @@ const router = createBrowserRouter([
     path: "/signup",
     element:<SignupPage></SignupPage>,
   },
-  { // only for testing - later will add page
+  { 
     path: "/cart",
     element:<CartPage></CartPage>,
+  },
+  { 
+    path: "/checkout",
+    element:<Checkout></Checkout>,
   },
 ]);
 
