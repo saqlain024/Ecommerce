@@ -330,7 +330,7 @@ export default function ProductList() {
   );
 }
 
-function MobileFilter({
+function MobileFilter ({
   mobileFiltersOpen,
   setMobileFiltersOpen,
   handleFilter,
