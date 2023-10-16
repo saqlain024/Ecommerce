@@ -201,26 +201,33 @@ export default function ProductList() {
   const dispatch = useDispatch();
   const products = useSelector(selectAllProducts);
   const [filter, setFilter] = useState({});
+  const [sort, setSort] = useState({});
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
   const handleFilter = (e, section, option) => {
-    const newFilter = { ...filter, [section.id]: option.value };
+    console.log(e.target.checked);
+    const newFilter = {...filter};
+    // TODO: on server it will support multiple catogeries
+    if(e.target.checked) {
+      newFilter[section.id] = option.value;
+    } else {
+      delete newFilter[section.id];
+    }
+
     setFilter(newFilter);
-    dispatch(fetchAllProductsByFiltersAsync(newFilter));
     console.log(section.id, option.value);
   };
 
   const handleSort = (e, option) => {
-    const newFilter = { ...filter, _sort: option.sort, _order: option.order };
-    setFilter(newFilter);
-    dispatch(fetchAllProductsByFiltersAsync(newFilter));
+    const sort = { _sort: option.sort, _order: option.order };
+    setSort(sort);
   };
 
   useEffect(() => {
-    dispatch(fetchAllProductsAsync());
-  }, [dispatch]);
+    dispatch(fetchAllProductsByFiltersAsync({filter,sort}));
+  }, [dispatch,filter]);
 
-  return (
+  return (  
     <div>
       <div>
         <div className="bg-white">
