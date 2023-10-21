@@ -19,7 +19,7 @@ export function fetchProductsByFilters(filter, sort) {
     const categoryValues = filter[key];
     if(categoryValues.length > 0) {
       const lastCategoryValue = categoryValues[categoryValues.length-1];
-      queryString += `${key}=${filter[lastCategoryValue]}&`;
+      queryString += `${key}=${lastCategoryValue}&`
     }
   }
 
