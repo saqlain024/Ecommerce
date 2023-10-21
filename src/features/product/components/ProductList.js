@@ -208,26 +208,38 @@ export default function ProductList() {
     console.log(e.target.checked);
     const newFilter = {...filter};
     // TODO: on server it will support multiple catogeries
-    if(e.target.checked) {
-      newFilter[section.id] = option.value;
+    if (e.target.checked) {
+
+      if (newFilter[section.id]) {
+        newFilter[section.id].push(option.value);
+      } else {
+        newFilter[section.id] = [option.value];
+      }
+
     } else {
-      delete newFilter[section.id];
+      const index = newFilter[section.id].findIndex(
+        (el) => el === option.value
+      );
+      newFilter[section.id].splice(index,1);
     }
 
+    console.log({newFilter});
+
     setFilter(newFilter);
-    console.log(section.id, option.value);
   };
 
   const handleSort = (e, option) => {
     const sort = { _sort: option.sort, _order: option.order };
+    console.log({sort});
+
     setSort(sort);
   };
 
   useEffect(() => {
-    dispatch(fetchAllProductsByFiltersAsync({filter,sort}));
-  }, [dispatch,filter]);
+    dispatch(fetchAllProductsByFiltersAsync({ filter, sort }));
+  }, [dispatch, filter, sort]);
 
-  return (  
+  return (
     <div>
       <div>
         <div className="bg-white">
@@ -337,7 +349,7 @@ export default function ProductList() {
   );
 }
 
-function MobileFilter ({
+function MobileFilter({
   mobileFiltersOpen,
   setMobileFiltersOpen,
   handleFilter,

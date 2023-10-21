@@ -17,15 +17,14 @@ export function fetchProductsByFilters(filter, sort) {
   let queryString = '';
   for(let key in filter){
     const categoryValues = filter[key];
-    if(categoryValues.length > 1) {
+    if(categoryValues.length > 0) {
       const lastCategoryValue = categoryValues[categoryValues.length-1];
-      queryString += `${key}=${filter[key]}&`;
+      queryString += `${key}=${filter[lastCategoryValue]}&`;
     }
   }
 
   for(let key in sort){
-      queryString += `${key}=${sort[key]}&`;
-    }
+    queryString += `${key}=${sort[key]}&`;
   }
 
 
