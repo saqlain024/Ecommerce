@@ -2,8 +2,12 @@ import React, { useState, Fragment, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   fetchAllProductsAsync,
+  fetchBrandsAsync,
+  fetchCategoriesAsync,
   fetchProductsByFiltersAsync,
   selectAllProducts,
+  selectBrands,
+  selectCategories,
   selectTotalItems,
 } from "../productSlice";
 import { Dialog, Disclosure, Menu, Transition } from "@headlessui/react";
@@ -23,6 +27,7 @@ import {
 } from "@heroicons/react/20/solid";
 import { Link } from "react-router-dom";
 import { ITEMS_PER_PAGE } from "../../../app/constant";
+
 
 const sortOptions = [
   { name: "Best Rating", sort: "rating", order: "desc", current: false },
@@ -202,7 +207,23 @@ function classNames(...classes) {
 export default function ProductList() {
   const dispatch = useDispatch();
   const products = useSelector(selectAllProducts);
+  const brands = useSelector(selectBrands);
+  const categories = useSelector(selectCategories);
   const totalItems = useSelector(selectTotalItems);
+
+  const filters = [
+    {
+      id: "category",
+      name: "Category",
+      options: categories,
+    },
+    {
+      id: "brand",
+      name: "Brands",
+      options: brands,
+    },
+  ];
+
   const [filter, setFilter] = useState({});
   const [sort, setSort] = useState({});
   const [page, setPage] = useState(1);
@@ -249,7 +270,16 @@ export default function ProductList() {
 
   useEffect(() => {
     setPage(1);
-  }, [totalItems,sort]);
+  }, [totalItems, sort]);
+
+  useEffect(() => {
+    dispatch(fetchBrandsAsync())
+    dispatch(fetchCategoriesAsync())
+
+  }, []);
+
+
+
 
   return (
     <div>
@@ -260,6 +290,7 @@ export default function ProductList() {
               handleFilter={handleFilter}
               mobileFiltersOpen={mobileFiltersOpen}
               setMobileFiltersOpen={setMobileFiltersOpen}
+              filters={filters}
             ></MobileFilter>
 
             <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -341,7 +372,10 @@ export default function ProductList() {
                 </h2>
 
                 <div className="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-4">
-                  <DesktopFilter handleFilter={handleFilter}></DesktopFilter>
+                  <DesktopFilter
+                    handleFilter={handleFilter}
+                    filters={filters}
+                  ></DesktopFilter>
 
                   {/* Product grid */}
                   <div className="lg:col-span-3">
@@ -370,6 +404,7 @@ function MobileFilter({
   mobileFiltersOpen,
   setMobileFiltersOpen,
   handleFilter,
+  filters,
 }) {
   return (
     <Transition.Root show={mobileFiltersOpen} as={Fragment}>
@@ -484,7 +519,7 @@ function MobileFilter({
   );
 }
 
-function DesktopFilter({ handleFilter }) {
+function DesktopFilter({ handleFilter, filters }) {
   return (
     <>
       {/* Filters */}
